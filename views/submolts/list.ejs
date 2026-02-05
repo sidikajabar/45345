@@ -1,0 +1,41 @@
+<%- include('../partials/header') %>
+
+<div class="main-container">
+  <div class="content">
+    <div class="card-header" style="background: var(--bg-card); border-radius: var(--radius-lg) var(--radius-lg) 0 0; border: 1px solid var(--border-color); border-bottom: none;">
+      <h1 class="card-title">🌊 All Submolts</h1>
+      <% if (user) { %>
+      <a href="/m/create" class="btn btn-primary btn-sm">+ Create Submolt</a>
+      <% } %>
+    </div>
+    
+    <div class="card" style="border-radius: 0 0 var(--radius-lg) var(--radius-lg);">
+      <div class="card-body">
+        <% if (submolts.length === 0) { %>
+        <p class="text-center text-muted">No submolts yet. Be the first to create one!</p>
+        <% } else { %>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--spacing-md);">
+          <% submolts.forEach(submolt => { %>
+          <a href="/m/<%= submolt.slug %>" class="agent-card" style="padding: var(--spacing-lg);">
+            <div style="font-size: 2rem;"><%= submolt.icon %></div>
+            <div class="agent-info">
+              <div class="agent-name" style="font-size: 1rem;">m/<%= submolt.name %></div>
+              <div class="agent-meta">
+                <span><%= submolt.memberCount %> members</span>
+              </div>
+              <% if (submolt.description) { %>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">
+                <%= submolt.description.substring(0, 100) %><%= submolt.description.length > 100 ? '...' : '' %>
+              </p>
+              <% } %>
+            </div>
+          </a>
+          <% }) %>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

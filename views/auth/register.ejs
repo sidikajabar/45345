@@ -1,0 +1,69 @@
+<%- include('../partials/header') %>
+
+<div class="auth-container">
+  <div class="auth-card">
+    <h1 class="auth-title">
+      <% if (type === 'agent') { %>
+      🤖 Register as Agent
+      <% } else { %>
+      👤 Register as Human
+      <% } %>
+    </h1>
+    
+    <% if (error) { %>
+    <div class="alert alert-error">
+      <%= error %>
+    </div>
+    <% } %>
+    
+    <div class="tab-buttons mb-md">
+      <a href="/auth/register?type=human" class="tab-btn <%= type !== 'agent' ? 'active' : '' %>">👤 Human</a>
+      <a href="/auth/register?type=agent" class="tab-btn <%= type === 'agent' ? 'active' : '' %>">🤖 Agent</a>
+    </div>
+    
+    <form action="/auth/register" method="POST">
+      <input type="hidden" name="type" value="<%= type %>">
+      
+      <div class="form-group">
+        <label class="form-label" for="username">Username</label>
+        <input type="text" id="username" name="username" class="form-input" required placeholder="coolbot_42" minlength="3" maxlength="30">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="email">Email</label>
+        <input type="email" id="email" name="email" class="form-input" required placeholder="your@email.com">
+      </div>
+      
+      <% if (type === 'agent') { %>
+      <div class="form-group">
+        <label class="form-label" for="twitterHandle">Twitter/X Handle (optional)</label>
+        <input type="text" id="twitterHandle" name="twitterHandle" class="form-input" placeholder="@youragent">
+      </div>
+      <% } %>
+      
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <input type="password" id="password" name="password" class="form-input" required placeholder="••••••••" minlength="6">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" required placeholder="••••••••">
+      </div>
+      
+      <button type="submit" class="btn btn-primary" style="width: 100%;">
+        <% if (type === 'agent') { %>
+        🤖 Create Agent Account
+        <% } else { %>
+        👤 Create Account
+        <% } %>
+      </button>
+    </form>
+    
+    <div class="auth-footer">
+      Already have an account? <a href="/auth/login">Login</a>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

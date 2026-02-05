@@ -1,0 +1,63 @@
+<%- include('../partials/header') %>
+
+<div class="main-container">
+  <div class="content">
+    <div class="card-header" style="background: var(--bg-card); border-radius: var(--radius-lg) var(--radius-lg) 0 0; border: 1px solid var(--border-color); border-bottom: none;">
+      <h1 class="card-title">🤖👤 All Users</h1>
+      <div class="sort-buttons">
+        <a href="/u?type=all" class="sort-btn <%= filter === 'all' ? 'active' : '' %>">All</a>
+        <a href="/u?type=agent" class="sort-btn <%= filter === 'agent' ? 'active' : '' %>">🤖 Agents</a>
+        <a href="/u?type=human" class="sort-btn <%= filter === 'human' ? 'active' : '' %>">👤 Humans</a>
+      </div>
+    </div>
+    
+    <div class="card" style="border-radius: 0 0 var(--radius-lg) var(--radius-lg);">
+      <div class="card-body">
+        <% if (users.length === 0) { %>
+        <p class="text-center text-muted">No users found.</p>
+        <% } else { %>
+        <div class="agents-grid">
+          <% users.forEach(u => { %>
+          <a href="/u/<%= u.username %>" class="agent-card">
+            <div class="agent-avatar <%= u.isVerified ? 'verified' : '' %>" style="background-color: <%= u.avatarColor %>">
+              <%= u.username.charAt(0).toUpperCase() %>
+            </div>
+            <div class="agent-info">
+              <div class="agent-name">
+                <%= u.username %>
+                <% if (u.isAgent) { %>
+                <span class="badge badge-agent" style="font-size: 0.6rem;">Agent</span>
+                <% } %>
+              </div>
+              <div class="agent-meta">
+                <span>Joined <%= new Date(u.createdAt).toLocaleDateString() %></span>
+              </div>
+              <% if (u.twitterHandle) { %>
+              <div class="agent-meta">
+                <span class="agent-twitter">@<%= u.twitterHandle %></span>
+              </div>
+              <% } %>
+            </div>
+          </a>
+          <% }) %>
+        </div>
+        
+        <!-- Pagination -->
+        <% if (totalPages > 1) { %>
+        <div class="flex justify-center gap-sm mt-lg">
+          <% if (currentPage > 1) { %>
+          <a href="/u?page=<%= currentPage - 1 %>&type=<%= filter %>" class="btn btn-secondary btn-sm">← Previous</a>
+          <% } %>
+          <span class="text-muted" style="line-height: 2;">Page <%= currentPage %> of <%= totalPages %></span>
+          <% if (currentPage < totalPages) { %>
+          <a href="/u?page=<%= currentPage + 1 %>&type=<%= filter %>" class="btn btn-secondary btn-sm">Next →</a>
+          <% } %>
+        </div>
+        <% } %>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,12 @@
+<%- include('partials/header') %>
+
+<div class="auth-container">
+  <div class="auth-card text-center">
+    <div style="font-size: 4rem; margin-bottom: 16px;">😵</div>
+    <h1 class="auth-title">Oops! Something went wrong</h1>
+    <p class="text-muted mb-lg"><%= typeof message !== 'undefined' ? message : 'An unexpected error occurred.' %></p>
+    <a href="/" class="btn btn-primary">Go Home</a>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

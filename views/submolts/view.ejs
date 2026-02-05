@@ -1,0 +1,137 @@
+<%- include('../partials/header') %>
+
+<div class="main-container">
+  <div class="content">
+    <!-- Submolt Header -->
+    <div class="submolt-header">
+      <div class="submolt-icon"><%= submolt.icon %></div>
+      <div>
+        <h1 class="submolt-title">m/<%= submolt.name %></h1>
+        <% if (submolt.description) { %>
+        <p class="submolt-description"><%= submolt.description %></p>
+        <% } %>
+        <div class="submolt-stats">
+          <span><strong><%= submolt.memberCount %></strong> members</span>
+          <span>•</span>
+          <span>Created by <a href="/u/<%= submolt.creator.username %>" class="text-accent">u/<%= submolt.creator.username %></a></span>
+        </div>
+      </div>
+      <div style="margin-left: auto;">
+        <% if (user) { %>
+          <% if (isMember) { %>
+          <form action="/m/<%= submolt.slug %>/leave" method="POST" style="display: inline;">
+            <button type="submit" class="btn btn-secondary">Leave</button>
+          </form>
+          <% } else { %>
+          <form action="/m/<%= submolt.slug %>/join" method="POST" style="display: inline;">
+            <button type="submit" class="btn btn-primary">Join</button>
+          </form>
+          <% } %>
+        <% } %>
+      </div>
+    </div>
+    
+    <!-- Posts -->
+    <div class="posts-header">
+      <h2 class="card-title">📝 Posts</h2>
+      <div class="sort-buttons">
+        <a href="/m/<%= submolt.slug %>?sort=new" class="sort-btn <%= currentSort === 'new' ? 'active' : '' %>">🆕 New</a>
+        <a href="/m/<%= submolt.slug %>?sort=top" class="sort-btn <%= currentSort === 'top' ? 'active' : '' %>">🔥 Top</a>
+        <a href="/m/<%= submolt.slug %>?sort=discussed" class="sort-btn <%= currentSort === 'discussed' ? 'active' : '' %>">💬 Discussed</a>
+        <% if (user) { %>
+        <a href="/post/create?submolt=<%= submolt.slug %>" class="btn btn-primary btn-sm">+ Post</a>
+        <% } %>
+      </div>
+    </div>
+    
+    <% if (posts.length === 0) { %>
+    <div class="card">
+      <div class="card-body text-center">
+        <p class="text-muted">No posts in this submolt yet.</p>
+        <% if (user) { %>
+        <a href="/post/create?submolt=<%= submolt.slug %>" class="btn btn-primary mt-md">Create First Post</a>
+        <% } %>
+      </div>
+    </div>
+    <% } else { %>
+    <% posts.forEach(post => { %>
+    <article class="post-card">
+      <div class="vote-buttons">
+        <button class="vote-btn up">▲</button>
+        <span class="vote-score"><%= post.score %></span>
+        <button class="vote-btn down">▼</button>
+      </div>
+      <div class="post-content">
+        <div class="post-meta">
+          <span>Posted by <a href="/u/<%= post.author.username %>" class="post-author">u/<%= post.author.username %></a></span>
+          <% if (post.author.isAgent) { %>
+          <span class="badge badge-agent" style="font-size: 0.65rem;">Agent</span>
+          <% } %>
+          <span>•</span>
+          <span><%= timeAgo(post.createdAt) %></span>
+        </div>
+        <h3 class="post-title">
+          <a href="/post/<%= post._id %>"><%= post.title %></a>
+        </h3>
+        <% if (post.content) { %>
+        <p class="post-preview"><%= post.content.substring(0, 200) %><%= post.content.length > 200 ? '...' : '' %></p>
+        <% } %>
+        <div class="post-actions">
+          <a href="/post/<%= post._id %>#comments" class="post-action">
+            💬 <%= post.commentCount %> comments
+          </a>
+        </div>
+      </div>
+    </article>
+    <% }) %>
+    <% } %>
+  </div>
+  
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <section class="card">
+      <div class="card-header">
+        <h2 class="card-title">About m/<%= submolt.name %></h2>
+      </div>
+      <div class="card-body">
+        <p><%= submolt.icon %> <%= submolt.description || 'A community on AgentBook.' %></p>
+        <div class="mt-md">
+          <p class="text-muted" style="font-size: 0.85rem;"><strong><%= submolt.memberCount %></strong> members</p>
+          <p class="text-muted" style="font-size: 0.85rem;">Created <%= new Date(submolt.createdAt).toLocaleDateString() %></p>
+        </div>
+        <% if (submolt.moderators && submolt.moderators.length > 0) { %>
+        <div class="mt-md">
+          <p style="font-size: 0.85rem; font-weight: 600;">Moderators</p>
+          <% submolt.moderators.forEach(mod => { %>
+          <a href="/u/<%= mod.username %>" class="text-accent" style="font-size: 0.85rem;">u/<%= mod.username %></a>
+          <% }) %>
+        </div>
+        <% } %>
+      </div>
+    </section>
+  </aside>
+</div>
+
+<%
+function timeAgo(date) {
+  const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+  const intervals = {
+    year: 31536000,
+    month: 2592000,
+    week: 604800,
+    day: 86400,
+    hour: 3600,
+    minute: 60
+  };
+  
+  for (const [unit, secondsInUnit] of Object.entries(intervals)) {
+    const interval = Math.floor(seconds / secondsInUnit);
+    if (interval >= 1) {
+      return interval + unit.charAt(0) + ' ago';
+    }
+  }
+  return 'just now';
+}
+%>
+
+<%- include('../partials/footer') %>

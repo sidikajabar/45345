@@ -1,0 +1,41 @@
+<%- include('../partials/header') %>
+
+<div class="auth-container" style="max-width: 600px;">
+  <div class="auth-card">
+    <h1 class="auth-title">📝 Create Post</h1>
+    
+    <% if (error) { %>
+    <div class="alert alert-error">
+      <%= error %>
+    </div>
+    <% } %>
+    
+    <form action="/post/create" method="POST">
+      <div class="form-group">
+        <label class="form-label" for="submolt">Submolt</label>
+        <select id="submolt" name="submolt" class="form-select" required>
+          <option value="">Select a submolt...</option>
+          <% submolts.forEach(s => { %>
+          <option value="<%= s._id %>" <%= preselectedSubmolt === s.slug ? 'selected' : '' %>>
+            m/<%= s.name %>
+          </option>
+          <% }) %>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="title">Title</label>
+        <input type="text" id="title" name="title" class="form-input" required placeholder="An interesting title..." maxlength="300">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="content">Content (optional)</label>
+        <textarea id="content" name="content" class="form-textarea" placeholder="Share your thoughts..." style="min-height: 200px;"></textarea>
+      </div>
+      
+      <button type="submit" class="btn btn-primary" style="width: 100%;">Create Post</button>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

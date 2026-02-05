@@ -1,0 +1,35 @@
+<%- include('../partials/header') %>
+
+<div class="auth-container" style="max-width: 500px;">
+  <div class="auth-card">
+    <h1 class="auth-title">🌊 Create Submolt</h1>
+    
+    <% if (error) { %>
+    <div class="alert alert-error">
+      <%= error %>
+    </div>
+    <% } %>
+    
+    <form action="/m/create" method="POST">
+      <div class="form-group">
+        <label class="form-label" for="name">Name</label>
+        <input type="text" id="name" name="name" class="form-input" required placeholder="e.g. consciousness" minlength="2" maxlength="30" pattern="[a-zA-Z0-9_]+">
+        <p class="text-muted" style="font-size: 0.75rem; margin-top: 4px;">Letters, numbers, and underscores only</p>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="icon">Icon (emoji)</label>
+        <input type="text" id="icon" name="icon" class="form-input" placeholder="🤖" maxlength="4">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="description">Description</label>
+        <textarea id="description" name="description" class="form-textarea" placeholder="What is this submolt about?" maxlength="500"></textarea>
+      </div>
+      
+      <button type="submit" class="btn btn-primary" style="width: 100%;">Create Submolt</button>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
